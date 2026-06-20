@@ -79,6 +79,28 @@ Settings.Global.getInt(contentResolver, "adb_enabled") == 1
 
 Setting the value to `2` makes this check return `false`, while Android internally treats it as truthy (non-zero = enabled).
 
+## Compatibility
+
+Tested with `adb_enabled = 2`:
+
+| App | Status | Notes |
+|---|:-:|---|
+| iPASS MONEY | ✅ | |
+| PX Pay (全支付) | ✅ | |
+| Easy Wallet (悠遊付) | ✅ | |
+| Taipei Fubon Bank (台北富邦銀行) | ✅ | |
+| Fubon AI Pro (富邦 AI Pro) | ✅ | |
+| e-Post Office (行動郵局) | ✅ | |
+| JKOPAY (街口支付) | ✅ | |
+| Cathay United Bank (國泰世華) | ✅ | |
+| CTBC Bank (中國信託) | ✅ | |
+| OPEN POINT | ✅ | |
+| Cathay Securities (國泰證券) | ⚠️ | Warning shown, but does not affect functionality |
+| Next Bank (將來銀行) | ⚠️ | Transfer feature restricted |
+| FamilyMart (全家便利商店) | ❌ | Refuses to launch |
+
+> **Note:** Apps that use more sophisticated detection methods (e.g. checking USB connection state, `ro.debuggable`, or using attestation APIs) may still detect debugging regardless of the `adb_enabled` value.
+
 ## Project Structure
 
 ```

@@ -79,6 +79,28 @@ Settings.Global.getInt(contentResolver, "adb_enabled") == 1
 
 將值設為 `2` 讓這個檢查回傳 `false`，而 Android 內部將其視為 truthy（非零 = 啟用）。
 
+## 相容性
+
+以 `adb_enabled = 2` 測試：
+
+| APP | 狀態 | 備註 |
+|---|:-:|---|
+| iPASS MONEY (一卡通) | ✅ | |
+| 全支付 | ✅ | |
+| 悠遊付 (Easy Wallet) | ✅ | |
+| 台北富邦銀行 | ✅ | |
+| 富邦 AI Pro | ✅ | |
+| 行動郵局 | ✅ | |
+| 街口支付 | ✅ | |
+| 國泰世華 | ✅ | |
+| 中國信託 | ✅ | |
+| OPEN POINT | ✅ | |
+| 國泰證券 | ⚠️ | 會顯示警告，但不影響使用 |
+| 將來銀行 | ⚠️ | 轉帳功能受限 |
+| 全家便利商店 | ❌ | 拒絕啟動 |
+
+> **注意：** 使用更進階偵測方式的 APP（如檢查 USB 連線狀態、`ro.debuggable` 或使用 attestation API）可能仍會偵測到偵錯模式，不受 `adb_enabled` 值影響。
+
 ## 專案結構
 
 ```

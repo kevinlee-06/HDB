@@ -30,4 +30,7 @@
 
     <!-- Toast -->
     <string name="applied_toast">Setting applied</string>
+
+    <string name="tile_label">ADB Kit</string>
+    <string name="tile_subtitle">Tap to open settings</string>
 </resources>

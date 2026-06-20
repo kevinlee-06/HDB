@@ -29,4 +29,7 @@
 
     <!-- Toast -->
     <string name="applied_toast">已套用設定</string>
+
+    <string name="tile_label">ADB Kit</string>
+    <string name="tile_subtitle">點擊打開設定</string>
 </resources>

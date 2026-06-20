@@ -13,7 +13,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.MaterialColors
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
     companion object {
         const val PREFS_NAME = "adbkit_prefs"
@@ -31,10 +31,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var textTargetValue: TextView
     private lateinit var cardPermHint: MaterialCardView
 
+    protected open val layoutResId: Int = R.layout.activity_main
+
     override fun onCreate(savedInstanceState: Bundle?) {
         DynamicColors.applyToActivityIfAvailable(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(layoutResId)
 
         val prefs = getPrefs(this)
         val savedValue = prefs.getInt(KEY_ADB_VALUE, DEFAULT_ADB_VALUE)

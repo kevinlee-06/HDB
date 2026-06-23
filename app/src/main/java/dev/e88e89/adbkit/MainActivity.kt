@@ -3,20 +3,18 @@ package dev.e88e89.adbkit
 import android.os.Bundle
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.card.MaterialCardView
-import com.google.android.material.color.DynamicColors
+import android.app.Activity
+import android.view.View
 
-open class MainActivity : AppCompatActivity() {
+open class MainActivity : Activity() {
 
     private lateinit var radioGroupImmediate: RadioGroup
-    private lateinit var cardPermHint: MaterialCardView
+    private lateinit var cardPermHint: View
     private var isUpdatingUI = false
 
     protected open val layoutResId: Int = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        DynamicColors.applyToActivityIfAvailable(this)
         super.onCreate(savedInstanceState)
         setContentView(layoutResId)
 

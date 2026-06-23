@@ -5,9 +5,9 @@
 
     <!-- Settings cards -->
     <string name="card_title_immediate">立即套用 ADB 狀態</string>
-    <string name="option_0">0 — 停用 ADB</string>
-    <string name="option_1">1 — 啟用 ADB（標準）</string>
-    <string name="option_2">2 — 繞過偵測（ADB 仍可用）</string>
+    <string name="option_0">停用 ADB</string>
+    <string name="option_1">啟用 ADB</string>
+    <string name="option_2">啟用 ADB + 反偵測</string>
 
     <!-- Status values -->
     <string name="perm_granted">已授權</string>

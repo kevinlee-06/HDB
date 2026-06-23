@@ -5,9 +5,9 @@
 
     <!-- Settings cards -->
     <string name="card_title_immediate">Immediate ADB State</string>
-    <string name="option_0">0 — Disable ADB</string>
-    <string name="option_1">1 — Enable ADB (standard)</string>
-    <string name="option_2">2 — Bypass detection (ADB still works)</string>
+    <string name="option_0">Disable ADB</string>
+    <string name="option_1">Enable ADB</string>
+    <string name="option_2">Enable ADB + Anti-detection</string>
 
     <!-- Status values -->
     <string name="perm_granted">Granted</string>

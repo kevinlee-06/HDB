@@ -2,22 +2,20 @@
 
 [中文版 README](README.zh_TW.md)
 
-A minimal Android app that automatically sets `adb_enabled` on boot to bypass financial app debug detection.
+A minimal, ultra-lightweight (~61 KB) Android app that easily manages adb_enabled to bypass financial app debug detection.
 
 ## How It Works
 
-Many financial/banking apps check `Settings.Global.ADB_ENABLED == 1` to detect USB debugging. By setting the value to **2**, these simple equality checks fail — the app thinks ADB is off, while Android still treats any non-zero value as enabled.
+Many financial/banking apps check Settings.Global.ADB_ENABLED == 1 to detect USB debugging. By setting the value to 2, these simple equality checks fail — the app thinks ADB is off, while Android still treats any non-zero value as enabled.
 
-ADB Kit applies this setting automatically every time the device boots, so you never have to worry about it resetting.
+ADB Kit provides a quick and native way to manage this setting.
 
 ## Features
 
-- 🔄 **Auto-apply on boot** — `BroadcastReceiver` listens for `BOOT_COMPLETED`
-- 🔧 **Configurable value** — Choose between `0`, `1`, or `2`
-- 🎨 **Material 3 UI** — Native look with Dynamic Colors (Material You)
-- 🌐 **i18n** — English & Traditional Chinese
-- 🔒 **Direct Boot aware** — Applies before user unlock
-- 📦 **Tiny** — No unnecessary dependencies
+- Quick Settings Tile: Toggle ADB directly from the quick settings panel
+- Configurable value: Choose between 0, 1, or 2
+- Pure Native UI: No heavy Material or AppCompat dependencies, reducing APK size to ~61 KB
+- i18n: English and Traditional Chinese
 
 ## Setup
 
@@ -26,98 +24,54 @@ ADB Kit applies this setting automatically every time the device boots, so you n
 Requires Java 17 and Android SDK.
 
 ```bash
-JAVA_HOME=/path/to/java17 \
-ANDROID_HOME=/path/to/android-sdk \
-./gradlew assembleDebug
+./gradlew assembleRelease
 ```
 
 ### 2. Install
 
 ```bash
-adb install app/build/outputs/apk/debug/app-debug.apk
+adb install app/build/outputs/apk/release/app-release.apk
 ```
 
 ### 3. Grant Permission
 
-`WRITE_SECURE_SETTINGS` cannot be granted through normal installation. You must grant it via ADB (one-time):
+WRITE_SECURE_SETTINGS cannot be granted through normal installation. You must grant it via ADB (one-time):
 
 ```bash
 adb shell pm grant dev.e88e89.adbkit android.permission.WRITE_SECURE_SETTINGS
 ```
 
-### 4. Launch Once
-
-Open the app at least once so Android will deliver `BOOT_COMPLETED` broadcasts to it:
-
-```bash
-adb shell am start dev.e88e89.adbkit/.MainActivity
-```
-
-## Usage
-
-1. Open the app
-2. Select the desired `adb_enabled` value:
-   - **0** — Disable ADB
-   - **1** — Enable ADB (standard)
-   - **2** — Bypass financial app detection (ADB still works)
-3. Tap **Apply Now** to apply immediately, or just leave it — the value will be applied on every boot
-4. Tap **Check** to verify the current permission and setting status
 
 ## How the Bypass Works
 
-| `adb_enabled` | ADB Functional | Financial App Detection |
+| adb_enabled | ADB Functional | Financial App Detection |
 |:-:|:-:|:-:|
-| 0 | ❌ No | ✅ Passes (ADB off) |
-| 1 | ✅ Yes | ❌ Detected |
-| 2 | ✅ Yes | ✅ Passes (≠ 1) |
-
-Most financial apps use a simple check like:
-
-```java
-Settings.Global.getInt(contentResolver, "adb_enabled") == 1
-```
-
-Setting the value to `2` makes this check return `false`, while Android internally treats it as truthy (non-zero = enabled).
+| 0 | No | Passes (ADB off) |
+| 1 | Yes | Detected |
+| 2 | Yes | Passes (≠ 1) |
 
 ## Compatibility
 
-Tested with `adb_enabled = 2`:
+Tested with adb_enabled = 2:
 
 | App | Status | Notes |
 |---|:-:|---|
-| iPASS MONEY | ✅ | |
-| PX Pay (全支付) | ✅ | |
-| Easy Wallet (悠遊付) | ✅ | |
-| Taipei Fubon Bank (台北富邦銀行) | ✅ | |
-| Fubon AI Pro (富邦 AI Pro) | ✅ | |
-| e-Post Office (行動郵局) | ✅ | |
-| JKOPAY (街口支付) | ✅ | |
-| Cathay United Bank (國泰世華) | ✅ | |
-| CTBC Bank (中國信託) | ✅ | |
-| OPEN POINT | ✅ | |
-| Cathay Securities (國泰證券) | ⚠️ | Warning shown, but does not affect functionality |
-| Next Bank (將來銀行) | ⚠️ | Transfer feature restricted |
-| FamilyMart (全家便利商店) | ❌ | Refuses to launch |
+| iPASS MONEY | Pass | |
+| PX Pay (全支付) | Pass | |
+| Easy Wallet (悠遊付) | Pass | |
+| Taipei Fubon Bank (台北富邦銀行) | Pass | |
+| Fubon AI Pro (富邦 AI Pro) | Pass | |
+| e-Post Office (行動郵局) | Pass | |
+| JKOPAY (街口支付) | Pass | |
+| Cathay United Bank (國泰世華) | Pass | |
+| CTBC Bank (中國信託) | Pass | |
+| OPEN POINT | Pass | |
+| Cathay Securities (國泰證券) | Warn | Warning shown, but does not affect functionality |
+| Next Bank (將來銀行) | Warn | Transfer feature restricted |
+| FamilyMart (全家便利商店) | Fail | Refuses to launch |
 
-> **Note:** Apps that use more sophisticated detection methods (e.g. checking USB connection state, `ro.debuggable`, or using attestation APIs) may still detect debugging regardless of the `adb_enabled` value.
-
-## Project Structure
-
-```
-app/src/main/
-├── AndroidManifest.xml
-├── java/dev/e88e89/adbkit/
-│   ├── MainActivity.kt      # UI + settings management
-│   └── BootReceiver.kt      # Applies setting on boot
-├── res/layout/
-│   └── activity_main.xml    # Material 3 layout
-├── res/values/
-│   ├── strings.xml           # English strings
-│   └── themes.xml            # Material 3 theme
-└── res/values-zh-rTW/
-    └── strings.xml           # Traditional Chinese strings
-```
+Note: Apps that use more sophisticated detection methods (e.g. checking USB connection state, ro.debuggable, or using attestation APIs) may still detect debugging regardless of the adb_enabled value.
 
 ## License
 
-This project is licensed under the [GNU General Public License v3.0](LICENSE).
+This project is licensed under the GNU General Public License v3.0.

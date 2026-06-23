@@ -1,83 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Permission hint (hidden by default) -->
-    <com.google.android.material.card.MaterialCardView
+    <!-- Permission hint -->
+    <TextView
         android:id="@+id/card_perm_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:visibility="gone"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="?attr/colorErrorContainer"
-        app:strokeWidth="0dp">
+        android:text="@string/perm_grant_hint"
+        android:textColor="#B71C1C"
+        android:layout_marginBottom="16dp" />
 
-        <TextView
-            android:id="@+id/text_perm_hint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/perm_grant_hint"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            android:textColor="?attr/colorOnErrorContainer"
-            android:fontFamily="monospace" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- ── Immediate Config Card ── -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        app:cardElevation="0dp"
-        style="?attr/materialCardViewOutlinedStyle">
+        android:text="@string/card_title_immediate"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
 
-        <LinearLayout
+    <RadioGroup
+        android:id="@+id/radio_group_immediate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radio_imm_0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:text="@string/option_0"
+            android:minHeight="56dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:tag="0" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/card_title_immediate"
-                android:textAppearance="?attr/textAppearanceTitleMedium" />
+        <RadioButton
+            android:id="@+id/radio_imm_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_1"
+            android:minHeight="56dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:tag="1" />
 
-
-            <RadioGroup
-                android:id="@+id/radio_group_immediate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/radio_imm_0"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/option_0"
-                    android:minHeight="48dp"
-                    android:gravity="center_vertical"
-                    android:tag="0" />
-
-                <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/radio_imm_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/option_1"
-                    android:minHeight="48dp"
-                    android:gravity="center_vertical"
-                    android:tag="1" />
-
-                <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/radio_imm_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/option_2"
-                    android:minHeight="48dp"
-                    android:gravity="center_vertical"
-                    android:tag="2" />
-            </RadioGroup>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <RadioButton
+            android:id="@+id/radio_imm_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_2"
+            android:minHeight="56dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:tag="2" />
+    </RadioGroup>
 
 </merge>

@@ -2,22 +2,20 @@
 
 [English README](README.md)
 
-一個極小的 Android App，在開機後自動設定 `adb_enabled`，繞過金融 APP 的偵錯偵測。
+一個極簡且極輕量的 Android App (約 61 KB)，用來快速切換 adb_enabled，以繞過金融 APP 的偵錯偵測。
 
 ## 原理
 
-許多金融／銀行 APP 透過 `Settings.Global.ADB_ENABLED == 1` 偵測 USB 偵錯模式。將值設為 **2**，這些簡單的相等檢查就會失敗 —— APP 認為 ADB 已關閉，但 Android 系統仍將非零值視為啟用。
+許多金融與銀行 APP 透過 Settings.Global.ADB_ENABLED == 1 偵測 USB 偵錯模式。將值設為 2，這些簡單的相等檢查就會失敗，APP 認為 ADB 已關閉，但 Android 系統仍將非零值視為啟用。
 
-ADB Kit 在每次開機時自動套用此設定，無需手動操作。
+ADB Kit 提供最簡單原生的方式來切換此狀態。
 
 ## 功能
 
-- 🔄 **開機自動套用** — `BroadcastReceiver` 監聽 `BOOT_COMPLETED`
-- 🔧 **可設定值** — 可選擇 `0`、`1` 或 `2`
-- 🎨 **Material 3 UI** — 原生外觀，支援動態色彩（Material You）
-- 🌐 **多語言** — 英文及繁體中文
-- 🔒 **Direct Boot** — 在使用者解鎖前即可套用
-- 📦 **極小** — 無多餘依賴
+- 快速設定面板 (Quick Settings Tile): 支援在狀態列下拉選單中直接切換狀態
+- 可自訂數值: 可選擇 0、1 或 2
+- 純原生 UI: 無多餘的 Material 或 AppCompat 依賴，APK 體積縮減至 ~61 KB
+- 多語言支援: 英文及繁體中文
 
 ## 安裝步驟
 
@@ -26,98 +24,54 @@ ADB Kit 在每次開機時自動套用此設定，無需手動操作。
 需要 Java 17 及 Android SDK。
 
 ```bash
-JAVA_HOME=/path/to/java17 \
-ANDROID_HOME=/path/to/android-sdk \
-./gradlew assembleDebug
+./gradlew assembleRelease
 ```
 
 ### 2. 安裝
 
 ```bash
-adb install app/build/outputs/apk/debug/app-debug.apk
+adb install app/build/outputs/apk/release/app-release.apk
 ```
 
 ### 3. 授權
 
-`WRITE_SECURE_SETTINGS` 無法透過一般安裝取得，必須透過 ADB 授權（一次性）：
+WRITE_SECURE_SETTINGS 無法透過一般安裝取得，必須透過 ADB 授權 (一次性):
 
 ```bash
 adb shell pm grant dev.e88e89.adbkit android.permission.WRITE_SECURE_SETTINGS
 ```
 
-### 4. 首次啟動
-
-至少開啟 APP 一次，Android 才會在開機時發送 `BOOT_COMPLETED` 廣播：
-
-```bash
-adb shell am start dev.e88e89.adbkit/.MainActivity
-```
-
-## 使用方式
-
-1. 開啟 APP
-2. 選擇開機後要設定的 `adb_enabled` 值：
-   - **0** — 停用 ADB
-   - **1** — 啟用 ADB（標準）
-   - **2** — 繞過金融 APP 偵測（ADB 仍可用）
-3. 點擊 **立即套用** 馬上生效，或直接關掉 —— 每次開機都會自動套用
-4. 點擊 **檢查** 確認目前的權限和設定狀態
 
 ## 繞過原理
 
-| `adb_enabled` | ADB 可用 | 金融 APP 偵測 |
+| adb_enabled | ADB 可用 | 金融 APP 偵測 |
 |:-:|:-:|:-:|
-| 0 | ❌ 否 | ✅ 通過（ADB 關閉） |
-| 1 | ✅ 是 | ❌ 被偵測 |
-| 2 | ✅ 是 | ✅ 通過（≠ 1） |
-
-大多數金融 APP 使用類似這樣的簡單檢查：
-
-```java
-Settings.Global.getInt(contentResolver, "adb_enabled") == 1
-```
-
-將值設為 `2` 讓這個檢查回傳 `false`，而 Android 內部將其視為 truthy（非零 = 啟用）。
+| 0 | 否 | 通過 (ADB 關閉) |
+| 1 | 是 | 被偵測 |
+| 2 | 是 | 通過 (≠ 1) |
 
 ## 相容性
 
-以 `adb_enabled = 2` 測試：
+以 adb_enabled = 2 測試:
 
 | APP | 狀態 | 備註 |
 |---|:-:|---|
-| iPASS MONEY (一卡通) | ✅ | |
-| 全支付 | ✅ | |
-| 悠遊付 (Easy Wallet) | ✅ | |
-| 台北富邦銀行 | ✅ | |
-| 富邦 AI Pro | ✅ | |
-| 行動郵局 | ✅ | |
-| 街口支付 | ✅ | |
-| 國泰世華 | ✅ | |
-| 中國信託 | ✅ | |
-| OPEN POINT | ✅ | |
-| 國泰證券 | ⚠️ | 會顯示警告，但不影響使用 |
-| 將來銀行 | ⚠️ | 轉帳功能受限 |
-| 全家便利商店 | ❌ | 拒絕啟動 |
+| iPASS MONEY (一卡通) | 通過 | |
+| 全支付 | 通過 | |
+| 悠遊付 (Easy Wallet) | 通過 | |
+| 台北富邦銀行 | 通過 | |
+| 富邦 AI Pro | 通過 | |
+| 行動郵局 | 通過 | |
+| 街口支付 | 通過 | |
+| 國泰世華 | 通過 | |
+| 中國信託 | 通過 | |
+| OPEN POINT | 通過 | |
+| 國泰證券 | 警告 | 會顯示警告，但不影響使用 |
+| 將來銀行 | 警告 | 轉帳功能受限 |
+| 全家便利商店 | 阻擋 | 拒絕啟動 |
 
-> **注意：** 使用更進階偵測方式的 APP（如檢查 USB 連線狀態、`ro.debuggable` 或使用 attestation API）可能仍會偵測到偵錯模式，不受 `adb_enabled` 值影響。
-
-## 專案結構
-
-```
-app/src/main/
-├── AndroidManifest.xml
-├── java/dev/e88e89/adbkit/
-│   ├── MainActivity.kt      # UI 與設定管理
-│   └── BootReceiver.kt      # 開機時套用設定
-├── res/layout/
-│   └── activity_main.xml    # Material 3 佈局
-├── res/values/
-│   ├── strings.xml           # 英文字串
-│   └── themes.xml            # Material 3 主題
-└── res/values-zh-rTW/
-    └── strings.xml           # 繁體中文字串
-```
+注意: 使用更進階偵測方式的 APP (如檢查 USB 連線狀態、ro.debuggable 或使用 attestation API) 可能仍會偵測到偵錯模式，不受 adb_enabled 值影響。
 
 ## 授權條款
 
-本專案採用 [GNU 通用公共授權條款第 3 版](LICENSE) 授權。
+本專案採用 GNU General Public License v3.0 授權。

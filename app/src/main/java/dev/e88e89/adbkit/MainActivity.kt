@@ -15,16 +15,6 @@ import com.google.android.material.color.MaterialColors
 
 open class MainActivity : AppCompatActivity() {
 
-    companion object {
-        const val PREFS_NAME = "adbkit_prefs"
-        const val KEY_ADB_VALUE = "adb_value"
-        const val DEFAULT_ADB_VALUE = 2
-
-        fun getPrefs(context: Context) =
-            context.createDeviceProtectedStorageContext()
-                .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    }
-
     private lateinit var textPermStatus: TextView
     private lateinit var textGlobalValue: TextView
     private lateinit var textSecureValue: TextView
@@ -38,8 +28,8 @@ open class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutResId)
 
-        val prefs = getPrefs(this)
-        val savedValue = prefs.getInt(KEY_ADB_VALUE, DEFAULT_ADB_VALUE)
+        val prefs = AdbSettingsManager.getPrefs(this)
+        val savedValue = prefs.getInt(AdbSettingsManager.KEY_ADB_VALUE, AdbSettingsManager.DEFAULT_ADB_VALUE)
 
         // ── Radio group ──
         val radioGroup = findViewById<RadioGroup>(R.id.radio_group)
@@ -53,7 +43,7 @@ open class MainActivity : AppCompatActivity() {
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selected = group.findViewById<RadioButton>(checkedId)
             val value = selected.tag.toString().toInt()
-            prefs.edit().putInt(KEY_ADB_VALUE, value).apply()
+            prefs.edit().putInt(AdbSettingsManager.KEY_ADB_VALUE, value).apply()
         }
 
         // ── Status views ──
@@ -69,7 +59,7 @@ open class MainActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.btn_apply).setOnClickListener {
-            BootReceiver.applyAdbSetting(this)
+            AdbSettingsManager.applyAdbSetting(this)
             refreshStatus()
             Toast.makeText(this, R.string.applied_toast, Toast.LENGTH_SHORT).show()
         }
@@ -78,8 +68,8 @@ open class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshStatus() {
-        val prefs = getPrefs(this)
-        val targetValue = prefs.getInt(KEY_ADB_VALUE, DEFAULT_ADB_VALUE)
+        val prefs = AdbSettingsManager.getPrefs(this)
+        val targetValue = prefs.getInt(AdbSettingsManager.KEY_ADB_VALUE, AdbSettingsManager.DEFAULT_ADB_VALUE)
 
         val globalValue = try {
             Settings.Global.getInt(contentResolver, Settings.Global.ADB_ENABLED)
@@ -90,12 +80,7 @@ open class MainActivity : AppCompatActivity() {
             Settings.Secure.getInt(contentResolver, "adb_enabled")
         } catch (_: Exception) { -1 }
 
-        val hasPermission = try {
-            Settings.Global.putInt(contentResolver, Settings.Global.ADB_ENABLED, globalValue)
-            true
-        } catch (_: SecurityException) {
-            false
-        }
+        val hasPermission = AdbSettingsManager.hasPermission(this)
 
         // Permission — use Material theme-resolved colors
         if (hasPermission) {

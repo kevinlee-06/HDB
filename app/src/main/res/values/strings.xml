@@ -3,18 +3,12 @@
     <string name="app_name">ADB Kit</string>
     <string name="subtitle">Bypass financial app debug detection</string>
 
-    <!-- Settings card -->
-    <string name="card_title_setting">Value after boot</string>
+    <!-- Settings cards -->
+    <string name="card_title_immediate">Immediate ADB State</string>
+    <string name="card_title_boot">Boot Configuration</string>
     <string name="option_0">0 — Disable ADB</string>
     <string name="option_1">1 — Enable ADB (standard)</string>
     <string name="option_2">2 — Bypass detection (ADB still works)</string>
-
-    <!-- Status card -->
-    <string name="card_title_status">Status</string>
-    <string name="label_permission">Permission</string>
-    <string name="label_global">Global adb_enabled</string>
-    <string name="label_secure">Secure adb_enabled</string>
-    <string name="label_target">Boot target value</string>
 
     <!-- Status values -->
     <string name="perm_granted">Granted</string>

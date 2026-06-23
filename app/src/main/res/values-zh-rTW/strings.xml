@@ -3,18 +3,12 @@
     <string name="app_name">ADB Kit</string>
     <string name="subtitle">繞過金融 APP 的偵錯偵測</string>
 
-    <!-- Settings card -->
-    <string name="card_title_setting">開機後設定值</string>
+    <!-- Settings cards -->
+    <string name="card_title_immediate">立即套用 ADB 狀態</string>
+    <string name="card_title_boot">開機後設定值</string>
     <string name="option_0">0 — 停用 ADB</string>
     <string name="option_1">1 — 啟用 ADB（標準）</string>
     <string name="option_2">2 — 繞過偵測（ADB 仍可用）</string>
-
-    <!-- Status card -->
-    <string name="card_title_status">狀態</string>
-    <string name="label_permission">權限</string>
-    <string name="label_global">Global adb_enabled</string>
-    <string name="label_secure">Secure adb_enabled</string>
-    <string name="label_target">開機目標值</string>
 
     <!-- Status values -->
     <string name="perm_granted">已授權</string>

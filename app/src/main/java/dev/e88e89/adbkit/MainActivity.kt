@@ -1,25 +1,19 @@
 package dev.e88e89.adbkit
 
-import android.content.Context
 import android.os.Bundle
-import android.provider.Settings
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.color.DynamicColors
-import com.google.android.material.color.MaterialColors
 
 open class MainActivity : AppCompatActivity() {
 
-    private lateinit var textPermStatus: TextView
-    private lateinit var textGlobalValue: TextView
-    private lateinit var textSecureValue: TextView
-    private lateinit var textTargetValue: TextView
+    private lateinit var radioGroupImmediate: RadioGroup
+    private lateinit var radioGroupBoot: RadioGroup
     private lateinit var cardPermHint: MaterialCardView
+    private var isUpdatingUI = false
 
     protected open val layoutResId: Int = R.layout.activity_main
 
@@ -28,78 +22,62 @@ open class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutResId)
 
-        val prefs = AdbSettingsManager.getPrefs(this)
-        val savedValue = prefs.getInt(AdbSettingsManager.KEY_ADB_VALUE, AdbSettingsManager.DEFAULT_ADB_VALUE)
-
-        // ── Radio group ──
-        val radioGroup = findViewById<RadioGroup>(R.id.radio_group)
-        val radioMap = mapOf(
-            0 to findViewById<RadioButton>(R.id.radio_0),
-            1 to findViewById<RadioButton>(R.id.radio_1),
-            2 to findViewById<RadioButton>(R.id.radio_2),
-        )
-        radioMap[savedValue]?.isChecked = true
-
-        radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val selected = group.findViewById<RadioButton>(checkedId)
-            val value = selected.tag.toString().toInt()
-            prefs.edit().putInt(AdbSettingsManager.KEY_ADB_VALUE, value).apply()
-        }
-
-        // ── Status views ──
-        textPermStatus = findViewById(R.id.text_perm_status)
-        textGlobalValue = findViewById(R.id.text_global_value)
-        textSecureValue = findViewById(R.id.text_secure_value)
-        textTargetValue = findViewById(R.id.text_target_value)
+        radioGroupImmediate = findViewById(R.id.radio_group_immediate)
+        radioGroupBoot = findViewById(R.id.radio_group_boot)
         cardPermHint = findViewById(R.id.card_perm_hint)
 
-        // ── Buttons ──
-        findViewById<MaterialButton>(R.id.btn_check).setOnClickListener {
+        radioGroupImmediate.setOnCheckedChangeListener { group, checkedId ->
+            if (isUpdatingUI) return@setOnCheckedChangeListener
+            val selected = group.findViewById<RadioButton>(checkedId)
+            val value = selected.tag.toString().toInt()
+            AdbSettingsManager.applyAdbValue(this, value)
             refreshStatus()
         }
 
-        findViewById<MaterialButton>(R.id.btn_apply).setOnClickListener {
-            AdbSettingsManager.applyAdbSetting(this)
-            refreshStatus()
-            Toast.makeText(this, R.string.applied_toast, Toast.LENGTH_SHORT).show()
+        radioGroupBoot.setOnCheckedChangeListener { group, checkedId ->
+            if (isUpdatingUI) return@setOnCheckedChangeListener
+            val selected = group.findViewById<RadioButton>(checkedId)
+            val value = selected.tag.toString().toInt()
+            AdbSettingsManager.getPrefs(this).edit().putInt(AdbSettingsManager.KEY_ADB_VALUE, value).apply()
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
         refreshStatus()
     }
 
     private fun refreshStatus() {
-        val prefs = AdbSettingsManager.getPrefs(this)
-        val targetValue = prefs.getInt(AdbSettingsManager.KEY_ADB_VALUE, AdbSettingsManager.DEFAULT_ADB_VALUE)
+        isUpdatingUI = true
 
-        val globalValue = try {
-            Settings.Global.getInt(contentResolver, Settings.Global.ADB_ENABLED)
-        } catch (_: Exception) { -1 }
-
-        val secureValue = try {
-            @Suppress("DEPRECATION")
-            Settings.Secure.getInt(contentResolver, "adb_enabled")
-        } catch (_: Exception) { -1 }
-
+        // Permission hint
         val hasPermission = AdbSettingsManager.hasPermission(this)
+        cardPermHint.visibility = if (hasPermission) android.view.View.GONE else android.view.View.VISIBLE
 
-        // Permission — use Material theme-resolved colors
-        if (hasPermission) {
-            textPermStatus.text = getString(R.string.perm_granted)
-            textPermStatus.setTextColor(
-                MaterialColors.getColor(textPermStatus, com.google.android.material.R.attr.colorPrimary)
-            )
-            cardPermHint.visibility = android.view.View.GONE
-        } else {
-            textPermStatus.text = getString(R.string.perm_not_granted)
-            textPermStatus.setTextColor(
-                MaterialColors.getColor(textPermStatus, com.google.android.material.R.attr.colorError)
-            )
-            cardPermHint.visibility = android.view.View.VISIBLE
+        // Immediate state
+        var globalValue = AdbSettingsManager.getGlobalAdbState(this)
+        if (globalValue != 0 && globalValue != 1) {
+            globalValue = 2
         }
+        
+        val radioImmMap = mapOf(
+            0 to findViewById<RadioButton>(R.id.radio_imm_0),
+            1 to findViewById<RadioButton>(R.id.radio_imm_1),
+            2 to findViewById<RadioButton>(R.id.radio_imm_2)
+        )
+        radioImmMap[globalValue]?.isChecked = true
 
-        // Values
-        textGlobalValue.text = globalValue.toString()
-        textSecureValue.text = secureValue.toString()
-        textTargetValue.text = targetValue.toString()
+        // Boot target
+        val prefs = AdbSettingsManager.getPrefs(this)
+        val bootValue = prefs.getInt(AdbSettingsManager.KEY_ADB_VALUE, AdbSettingsManager.DEFAULT_ADB_VALUE)
+        
+        val radioBootMap = mapOf(
+            0 to findViewById<RadioButton>(R.id.radio_boot_0),
+            1 to findViewById<RadioButton>(R.id.radio_boot_1),
+            2 to findViewById<RadioButton>(R.id.radio_boot_2)
+        )
+        radioBootMap[bootValue]?.isChecked = true
+
+        isUpdatingUI = false
     }
 }

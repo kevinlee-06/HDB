@@ -20,7 +20,10 @@ object AdbSettingsManager {
     fun applyAdbSetting(context: Context) {
         val prefs = getPrefs(context)
         val value = prefs.getInt(KEY_ADB_VALUE, DEFAULT_ADB_VALUE)
+        applyAdbValue(context, value)
+    }
 
+    fun applyAdbValue(context: Context, value: Int) {
         if (!hasPermission(context)) {
             Log.e(TAG, "Cannot apply setting, missing WRITE_SECURE_SETTINGS permission")
             return
@@ -47,6 +50,16 @@ object AdbSettingsManager {
             Log.i(TAG, "Secure adb_enabled → $value")
         } catch (e: SecurityException) {
             Log.e(TAG, "Secure write failed: ${e.message}")
+        }
+    }
+
+    fun getGlobalAdbState(context: Context): Int {
+        return try {
+            Settings.Global.getInt(context.contentResolver, Settings.Global.ADB_ENABLED)
+        } catch (_: Settings.SettingNotFoundException) {
+            -1
+        } catch (_: Exception) {
+            -1
         }
     }
 

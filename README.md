@@ -12,7 +12,7 @@ To use HDB, install the APK and grant the `WRITE_SECURE_SETTINGS` permission via
 ### 1. Install
 
 ```bash
-adb install hdb-v1.0.0.apk
+adb install hdb-v1.1.0.apk
 ```
 
 ### 2. Grant Permission
@@ -87,7 +87,7 @@ This project is licensed under the GNU General Public License v3.0.
 ### 1. 安裝 APK
 
 ```bash
-adb install hdb-v1.0.0.apk
+adb install hdb-v1.1.0.apk
 ```
 
 ### 2. 授予權限

@@ -24,10 +24,11 @@
     <string name="btn_apply_now">立即套用</string>
 
     <!-- Hint -->
-    <string name="perm_grant_hint">adb shell pm grant dev.e88e89.hdb\n  android.permission.WRITE_SECURE_SETTINGS</string>
+    <string name="perm_grant_hint">請至 GitHub 頁面複製並執行授權指令：\nhttps://github.com/kevinlee-06/HDB</string>
 
     <!-- Toast -->
     <string name="applied_toast">已套用設定</string>
+    <string name="perm_missing_toast">未取得 ADB 授權，請至 GitHub 頁面複製指令</string>
 
     <string name="tile_label">荷包蛋</string>
     <string name="tile_subtitle">點擊打開設定</string>

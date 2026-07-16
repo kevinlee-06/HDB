@@ -25,10 +25,11 @@
     <string name="btn_apply_now">Apply Now</string>
 
     <!-- Hint -->
-    <string name="perm_grant_hint">adb shell pm grant dev.e88e89.hdb\n  android.permission.WRITE_SECURE_SETTINGS</string>
+    <string name="perm_grant_hint">Please visit GitHub to copy and run the permission command:\nhttps://github.com/kevinlee-06/HDB</string>
 
     <!-- Toast -->
     <string name="applied_toast">Setting applied</string>
+    <string name="perm_missing_toast">ADB permission not granted. Visit GitHub for instructions.</string>
 
     <string name="tile_label">HDB</string>
     <string name="tile_subtitle">Tap to open settings</string>

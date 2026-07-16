@@ -3,6 +3,7 @@ package dev.e88e89.hdb
 import android.os.Bundle
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Toast
 import android.app.Activity
 import android.view.View
 
@@ -11,6 +12,7 @@ open class MainActivity : Activity() {
     private lateinit var radioGroupImmediate: RadioGroup
     private lateinit var cardPermHint: View
     private var isUpdatingUI = false
+    private var hasShownPermToast = false
 
     protected open val layoutResId: Int = R.layout.activity_main
 
@@ -34,6 +36,10 @@ open class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         refreshStatus()
+        if (!AdbSettingsManager.hasPermission(this) && !hasShownPermToast) {
+            hasShownPermToast = true
+            Toast.makeText(this, R.string.perm_missing_toast, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun refreshStatus() {

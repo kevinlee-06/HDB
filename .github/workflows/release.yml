@@ -35,10 +35,13 @@ jobs:
         id: vars
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+            RAW_VER="${{ inputs.version }}"
           else
-            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            RAW_VER="${{ github.ref_name }}"
           fi
+          echo "version=$RAW_VER" >> $GITHUB_OUTPUT
+          CLEAN_VER="${RAW_VER#v}"
+          echo "version_clean=$CLEAN_VER" >> $GITHUB_OUTPUT
 
       - name: Decode Keystore
         run: |
@@ -46,6 +49,8 @@ jobs:
 
       - name: Build and Sign Release APK
         env:
+          VERSION_NAME: ${{ steps.vars.outputs.version_clean }}
+          VERSION_CODE: ${{ github.run_number }}
           KEYSTORE_FILE: ${{ github.workspace }}/release.keystore
           KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}

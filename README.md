@@ -4,6 +4,8 @@
 
 A minimal, ultra-lightweight (~61 KB) Android app that easily manages `adb_enabled` to bypass financial app debug detection.
 
+## TL;DR for Android Developers & Power Users
+If you are tired of constantly digging into system settings to turn off USB Debugging every single time you need to open a banking or payment app, HDB is built for you. It is a zero-dependency, ultra-lightweight (~61 KB) utility that tricks stubborn financial apps into thinking ADB is disabled, allowing you to use your mobile banking seamlessly without breaking your development workflow. No root or Magisk modules required.
 
 ## Setup & Permission
 
@@ -74,7 +76,8 @@ This project is licensed under the GNU General Public License v3.0.
 
 [English](#hdb)
 
-一個極簡且極輕量的 Android App (約 61 KB)，用來快速切換 `adb_enabled`，以繞過金融 APP 的偵錯偵測。
+## 給開發者與玩機玩家的懶人包
+如果你受夠了每次打開網銀或行動支付 APP，都得大費周章跑去系統設定把 USB 偵錯關掉，用完再重新打開，這款工具就是為你打造的。荷包蛋是一個完全無第三方依賴、體積僅約 61 KB 的超輕量小工具，能讓你在不破壞開發工作流的前提下，欺騙金融 APP 的偵錯偵測，從此轉帳刷支付再也不卡頓。免 Root、免 Magisk 模組。
 
 | 應用程式介面 | 快速設定面板 |
 | :---: | :---: |
